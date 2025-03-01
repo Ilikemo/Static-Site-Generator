@@ -1,0 +1,18 @@
+from split_nodes_delimiter import *
+from textnode import *
+import unittest
+
+class TestSplitNodesDelimiter(unittest.TestCase):
+    def test_split_nodes_delimiter(self):
+        old_nodes = [TextNode("a,b,c", TextType.TEXT)]
+        new_nodes = split_nodes_delimiter(old_nodes, ",", TextType.LINK)
+        self.assertEqual(len(new_nodes), 3)
+        self.assertEqual(new_nodes[0].text, "a")
+        self.assertEqual(new_nodes[0].text_type, TextType.TEXT)
+        self.assertEqual(new_nodes[1].text, "b")
+        self.assertEqual(new_nodes[1].text_type, TextType.LINK)
+        self.assertEqual(new_nodes[2].text, "c")
+        self.assertEqual(new_nodes[2].text_type, TextType.TEXT)
+
+if __name__ == "__main__":
+    unittest.main()
