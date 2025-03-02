@@ -17,8 +17,7 @@ class HTMLNode:
         return html_string
     
     def __repr__(self):
-        return f"{self.tag}, {self.value}, {self.children}, {self.props}"
-
+        return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"
 
 class LeafNode(HTMLNode):
     def __init__(self, tag, value, props = None):
@@ -31,6 +30,9 @@ class LeafNode(HTMLNode):
             return self.value
         return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
     
+    def __repr__(self):
+        return f"LeafNode({self.tag}, {self.value}, {self.props})"
+    
 class ParentNode(HTMLNode):
     def __init__(self, tag, children, props = None):
         super().__init__(tag, None, children, props)
@@ -42,3 +44,6 @@ class ParentNode(HTMLNode):
             raise ValueError("ParentNode children cannot be None")
         children_html = "".join(map(lambda child: child.to_html(), self.children))
         return f"<{self.tag}{self.props_to_html()}>{children_html}</{self.tag}>"
+    
+    def __repr__(self):
+        return f"ParentNode({self.tag}, children: {self.children}, {self.props})"

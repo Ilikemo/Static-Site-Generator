@@ -10,7 +10,7 @@ class TestHTMLNode(unittest.TestCase):
         self.assertIsNone(self.node.children)
         self.assertEqual(self.node.props, {"class": "container", "id": "main"})
     def test_repr(self):
-        self.assertEqual(self.node.__repr__(), "div, Hello, World!, None, {'class': 'container', 'id': 'main'}")
+        self.assertEqual(self.node.__repr__(), "HTMLNode(div, Hello, World!, children: None, {'class': 'container', 'id': 'main'})")
     def test_props_to_html(self):
         self.assertEqual(self.node.props_to_html(), ' class="container" id="main"')
 
