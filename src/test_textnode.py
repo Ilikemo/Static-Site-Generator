@@ -1,7 +1,7 @@
 import unittest
 from textnode import TextNode, TextType
 from htmlnode import LeafNode
-from extract_markdown import text_node_to_html_node
+from inline_markdown import text_node_to_html_node
 
 
 class TestTextNode(unittest.TestCase):
