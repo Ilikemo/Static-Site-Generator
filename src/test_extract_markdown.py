@@ -1,4 +1,4 @@
-from extract_markdown import *
+from inline_markdown import *
 import unittest
 
 class TestExtractMarkdown(unittest.TestCase):
