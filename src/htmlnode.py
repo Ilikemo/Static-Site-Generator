@@ -4,7 +4,12 @@ class HTMLNode:
         self.value = value
         self.children = children
         self.props = props
-    
+
+        if self.children is None:
+            self.__class__ = LeafNode
+        else:
+            self.__class__ = ParentNode
+
     def to_html(self):
         raise NotImplementedError("to_html method not implemented")
     
