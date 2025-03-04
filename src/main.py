@@ -16,7 +16,7 @@ def main():
     if os.path.exists(dir_path_public):
         shutil.rmtree(dir_path_public)
 
-    move_files_from_static_to_public('static', 'public')
+    move_files_from_static_to_public(dir_path_static, dir_path_public)
     
     generate_pages_recursive(dir_path_content, template_path, dir_path_public, basepath)
     
