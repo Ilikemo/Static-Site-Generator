@@ -108,7 +108,9 @@ def block_to_quote(block):
     for line in lines:
         if not line.startswith(">"):
             raise ValueError("Invalid quote block")
-        quote_text.append(line.lstrip(">").strip())
+        line = line.lstrip(">").strip()
+        if line != "":
+            quote_text.append(line)
     content = " ".join(quote_text)
     children = text_to_children(content)
     return ParentNode("blockquote", children)

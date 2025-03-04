@@ -4,9 +4,19 @@ from block_markdown import markdown_to_html_node
 import os
 import shutil
 
+dir_path_static = "./static"
+dir_path_public = "./public"
+dir_path_content = "./content"
+template_path = "./template.html"
+
+
 def main():
+    if os.path.exists(dir_path_public):
+        shutil.rmtree(dir_path_public)
+
     move_files_from_static_to_public('static', 'public')
-    generate_page(open('content/index.md'), open('template.html'), open('public/index.html'))
+    
+    generate_pages_recursive(dir_path_content, template_path, dir_path_public)
     
 def move_files_from_static_to_public(source_dir, destination_dir):
     abs_destination_dir = os.path.abspath(destination_dir)
@@ -35,23 +45,46 @@ def extract_title(markdown):
     for line in markdown.split('\n'):
         line.strip()
         if line.startswith("# "):
-            title = line[2:]
-            break
+            return line[2:]
     if title is None:
         raise ValueError("Title not found in markdown content.")
-    return title
 
 def generate_page(from_path, template_path, dest_path):
-    print(f"Gnerating page from {from_path} to {dest_path} using {template_path}")
-    markdown_content = from_path.read()
-    template_content = template_path.read()
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+    from_file = open(from_path, 'r')
+    markdown_content = from_file.read()
+    from_file.close()   
+    
+    template_file = open(template_path, 'r')
+    template_content = template_file.read()
+    template_file.close()
+
     html_node = markdown_to_html_node(markdown_content)
     html_content = html_node.to_html()
+    
     title = extract_title(markdown_content)
-    template_content = template_content.replace("{{title}}", title)
-    template_content = template_content.replace("{{content}}", html_content)
-    dest_path.write(template_content)
+    template_content = template_content.replace("{{ Title }}", title)
+    template_content = template_content.replace("{{ Content }}", html_content)
 
+    dest_dir_path = os.path.dirname(dest_path)
+    if dest_dir_path != "":
+        os.makedirs(dest_dir_path, exist_ok=True)
+    to_file = open(dest_path, "w")
+    to_file.write(template_content)
+    to_file.close()
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for item in os.listdir(dir_path_content):
+        if item.endswith(".md"):
+            from_path = os.path.join(dir_path_content, item)
+            dest_path = os.path.join(dest_dir_path, item.replace(".md", ".html"))
+            generate_page(from_path, template_path, dest_path)
+        elif os.path.isdir(os.path.join(dir_path_content, item)):
+            new_dir_path_content = os.path.join(dir_path_content, item)
+            new_dest_dir_path = os.path.join(dest_dir_path, item)
+            generate_pages_recursive(new_dir_path_content, template_path, new_dest_dir_path)
+        else:
+            print(f"Skipping {item}, not a markdown file or directory.")
 
 main()
 
